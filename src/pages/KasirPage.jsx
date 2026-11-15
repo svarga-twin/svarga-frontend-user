@@ -4,6 +4,8 @@ import QRCode from "qrcode";
 import Icon from "../components/global/Icon";
 import { terbitkanQrTempatSendiri } from "../services/journeySync";
 
+const sisaDetik = (expiresAt) => Math.max(0, Math.round((new Date(expiresAt).getTime() - Date.now()) / 1000));
+
 /** Mode kasir UMKM: tombol "Customer membawa tempat sendiri" → QR sekali pakai untuk dipindai pelanggan. */
 export default function KasirPage() {
   const navigate = useNavigate();
@@ -18,12 +20,15 @@ export default function KasirPage() {
     if (!r.ok) return setState({ status: "error", error: r.error });
     const url = await QRCode.toDataURL(r.qr_payload, { margin: 1, width: 280, errorCorrectionLevel: "M" });
     setImg(url);
+    // Set the countdown in the same render as "ready"; otherwise sisa is still 0
+    // for one frame and the page briefly shows "QR kedaluwarsa." for a fresh QR.
+    setSisa(sisaDetik(r.expires_at));
     setState({ status: "ready", expiresAt: r.expires_at });
   }
 
   useEffect(() => {
     if (state.status !== "ready") return undefined;
-    const tick = () => setSisa(Math.max(0, Math.round((new Date(state.expiresAt).getTime() - Date.now()) / 1000)));
+    const tick = () => setSisa(sisaDetik(state.expiresAt));
     tick();
     const t = setInterval(tick, 1000);
     return () => clearInterval(t);
