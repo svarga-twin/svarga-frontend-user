@@ -16,7 +16,8 @@ export default function PollutantCard({ pollutant, koridorId, fallbackValue }) {
 
   if (!category) return null;
 
-  const sourceNote = reading.source === "live" ? "Live" : reading.source === "db" ? "Data lama" : null;
+  const asal = reading.origin === "open-meteo" ? " · Open-Meteo" : "";
+  const sourceNote = reading.source === "live" ? `Live${asal}` : reading.source === "db" ? "Data lama" : null;
   const shown = Math.round(value).toLocaleString("id-ID");
 
   return (

@@ -14,6 +14,7 @@ import { useSensorSnapshot } from "./useSensorSnapshot";
  * Return: { data, source, isStale, loading, error }
  *   data   — { sensor_type, value, unit, recorded_at } atau null
  *   source — 'live' (segar) | 'db' (data lama) | null (belum ada bacaan / backend tidak aktif)
+ *   origin — asal nilai: 'sensor' (ESP32) | 'open-meteo' (cadangan saat tak ada ESP32 aktif) | null
  *
  * Banyak kartu polutan di satu halaman memanggil hook ini dengan koridor yang sama; request
  * snapshot-nya digabung oleh cache singkat di sensorService, bukan satu request per kartu.
@@ -28,6 +29,7 @@ export function useSensorReading(sensorType, koridorId, options = {}) {
     () => ({
       data: reading,
       source: reading ? (reading.is_stale ? "db" : "live") : null,
+      origin: reading ? (reading.source === "open-meteo" ? "open-meteo" : "sensor") : null,
       isStale: reading ? Boolean(reading.is_stale) : false,
       loading: snap.loading,
       error: snap.error,
