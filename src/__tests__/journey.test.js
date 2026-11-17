@@ -33,6 +33,14 @@ describe("lib/journey", () => {
   it("parse isi QR", () => {
     expect(parseKoridorFromQr("https://jejakwangi.id/q/3")).toBe(3);
     expect(parseKoridorFromQr("jejakwangi:koridor:2")).toBe(2);
+    expect(parseKoridorFromQr("101")).toBe(1);
+    expect(parseKoridorFromQr("102")).toBe(1);
+    expect(parseKoridorFromQr("701")).toBe(7);
+    expect(parseKoridorFromQr("702")).toBe(7);
+    expect(parseKoridorFromQr("jejakwangi:titik:401")).toBe(4);
+    expect(parseKoridorFromQr("KOR-01-AWAL")).toBe(1);
+    expect(parseKoridorFromQr("KOR-02-AKHIR")).toBe(2);
+    expect(parseKoridorFromQr("jejakwangi:titik:KOR-07-AWAL")).toBe(7);
     expect(parseKoridorFromQr(" 5 ")).toBe(5);
     expect(parseKoridorFromQr("halo")).toBeNull();
     expect(parseKoridorFromQr("")).toBeNull();

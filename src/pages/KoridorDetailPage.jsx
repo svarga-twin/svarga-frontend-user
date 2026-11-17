@@ -6,6 +6,7 @@ import BottomNav from "../components/layout/BottomNav";
 import { getKoridorDetail } from "../services/koridorService";
 import { getUmkmByKoridor } from "../services/contentService";
 import SmartImage from "../components/global/SmartImage";
+import KoridorMedia from "../components/koridor/KoridorMedia";
 import EcoCoach from "../components/global/EcoCoach";
 import maskot from "../assets/pages/koridor/maskot.png";
 
@@ -351,11 +352,7 @@ export default function KoridorDetailPage() {
 
         {koridor && (
           <>
-            <SmartImage
-              src={koridor.hero_image}
-              alt={koridor.formal_name}
-              className="w-full h-40 object-cover rounded-2xl mt-4"
-            />
+            <KoridorMedia koridor={koridor} className="mt-4" />
 
             {koridor.highlights?.kunjungan?.length > 0 && <VisitHighlights items={koridor.highlights.kunjungan} />}
             {koridor.highlights?.eco_coach && <EcoCoach message={koridor.highlights.eco_coach} className="mt-4" />}

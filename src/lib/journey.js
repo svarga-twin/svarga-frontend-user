@@ -165,11 +165,17 @@ export function saranIspu(ispu) {
   };
 }
 
-/** Isi QR yang dikenali: "…/q/3", "jejakwangi:koridor:3", atau angka saja. null bila tidak dikenali. */
+/** Isi QR yang dikenali: "…/q/3", "jejakwangi:koridor:3", "101" (awal koridor 1), "102" (akhir koridor 1), angka polos, dsb. */
 export function parseKoridorFromQr(text) {
   if (!text) return null;
   const str = String(text).trim();
-  const m = str.match(/(?:\/q\/|koridor[:/=])(\d+)/i) ?? str.match(/^(\d+)$/);
+
+  // Format angka 3 digit (mis. 101 -> koridor 1, 702 -> koridor 7)
+  const m3 = str.match(/(?:^|[^0-9])([1-7])0[1-2](?:$|[^0-9])/);
+  if (m3) return Number(m3[1]);
+
+  // Format umum: /q/3, koridor:3, KOR-01, atau angka langsung
+  const m = str.match(/(?:\/q\/|koridor[:/=]|(?:KOR|kor)[-_]0?)(\d+)/i) ?? str.match(/^(\d+)$/);
   return m ? Number(m[1]) : null;
 }
 
